@@ -1,0 +1,276 @@
+{
+  "categories": [
+    { "name": "Điện thoại" },
+    { "name": "Laptop" },
+    { "name": "Phụ kiện" }
+  ],
+  "users": [
+    {
+      "name": "Admin User",
+      "email": "admin@eshop.com",
+      "password": "Admin123!",
+      "role": "admin"
+    },
+    {
+      "name": "Test User",
+      "email": "test@eshop.com",
+      "password": "Test1234!",
+      "role": "user"
+    }
+  ],
+  "products": [
+    {
+      "name": "iPhone 15 Pro Max",
+      "price": 30000000,
+      "description": "Điện thoại cao cấp của Apple",
+      "imageUrl": "https://placehold.co/300x300/png?text=iPhone+15",
+      "category_id": 1
+    },
+    {
+      "name": "Samsung Galaxy S24 Ultra",
+      "price": 28000000,
+      "description": "Màn hình hiển thị xuất sắc, camera siêu zoom",
+      "imageUrl": "https://placehold.co/300x300/png?text=Samsung+S24",
+      "category_id": 1
+    },
+    {
+      "name": "MacBook Pro M3",
+      "price": 45000000,
+      "description": "Laptop chuyên nghiệp mạnh mẽ",
+      "imageUrl": "https://placehold.co/300x300/png?text=Macbook+Pro",
+      "category_id": 2
+    },
+    {
+      "name": "Tai nghe AirPods Pro 2",
+      "price": 6000000,
+      "description": "Chống ồn chủ động xuất sắc",
+      "imageUrl": "https://placehold.co/300x300/png?text=AirPods+Pro",
+      "category_id": 3
+    },
+    {
+      "name": "Bàn phím cơ Keychron Q1",
+      "price": 4000000,
+      "description": "Gõ cực sướng, thiết kế kim loại",
+      "imageUrl": "https://placehold.co/300x300/png?text=Keychron+Q1",
+      "category_id": 3
+    },
+    {
+      "name": "Xiaomi 14 Ultra",
+      "price": 24000000,
+      "description": "Smartphone cao cấp, camera Leica",
+      "imageUrl": "https://placehold.co/300x300/png?text=Xiaomi+14+Ultra",
+      "category_id": 1
+    },
+    {
+      "name": "OPPO Find N3",
+      "price": 26000000,
+      "description": "Điện thoại gập màn hình lớn, trải nghiệm đa nhiệm",
+      "imageUrl": "https://placehold.co/300x300/png?text=OPPO+Find+N3",
+      "category_id": 1
+    },
+    {
+      "name": "ASUS ROG Zephyrus G14",
+      "price": 42000000,
+      "description": "Laptop gaming mỏng nhẹ, hiệu năng cao",
+      "imageUrl": "https://placehold.co/300x300/png?text=ROG+G14",
+      "category_id": 2
+    },
+    {
+      "name": "Dell XPS 13 Plus",
+      "price": 38000000,
+      "description": "Laptop siêu di động, thiết kế sang trọng",
+      "imageUrl": "https://placehold.co/300x300/png?text=XPS+13+Plus",
+      "category_id": 2
+    },
+    {
+      "name": "MSI Modern 14",
+      "price": 20000000,
+      "description": "Laptop văn phòng hiệu quả, pin lâu",
+      "imageUrl": "https://placehold.co/300x300/png?text=MSI+Modern+14",
+      "category_id": 2
+    },
+    {
+      "name": "Bộ sạc nhanh 65W",
+      "price": 900000,
+      "description": "Sạc nhanh đa năng cho điện thoại và laptop",
+      "imageUrl": "https://placehold.co/300x300/png?text=65W+Charger",
+      "category_id": 3
+    },
+    {
+      "name": "Chuột không dây Logitech MX Master 3",
+      "price": 2600000,
+      "description": "Chuột cao cấp cho làm việc và sáng tạo",
+      "imageUrl": "https://placehold.co/300x300/png?text=Logitech+MX+Master+3",
+      "category_id": 3
+    },
+    {
+      "name": "Màn hình Samsung Odyssey 27",
+      "price": 9500000,
+      "description": "Màn hình gaming cong, 144Hz",
+      "imageUrl": "https://placehold.co/300x300/png?text=Odyssey+27",
+      "category_id": 3
+    },
+    {
+      "name": "Tai nghe Sony WH-1000XM5",
+      "price": 8500000,
+      "description": "Tai nghe chống ồn đỉnh cao, âm thanh chi tiết",
+      "imageUrl": "https://placehold.co/300x300/png?text=Sony+WH-1000XM5",
+      "category_id": 3
+    },
+    {
+      "name": "Sạc dự phòng 20000mAh",
+      "price": 1200000,
+      "description": "Pin sạc dự phòng chất lượng cao, hỗ trợ PD",
+      "imageUrl": "https://placehold.co/300x300/png?text=Power+Bank+20000",
+      "category_id": 3
+    },
+    {
+      "name": "Ốp lưng iPhone silicon",
+      "price": 350000,
+      "description": "Ốp lưng mềm mại, chống sốc cho iPhone",
+      "imageUrl": "https://placehold.co/300x300/png?text=iPhone+Case",
+      "category_id": 3
+    },
+    {
+      "name": "Tai nghe Galaxy Buds 3",
+      "price": 3200000,
+      "description": "Tai nghe true wireless cho hệ sinh thái Samsung",
+      "imageUrl": "https://placehold.co/300x300/png?text=Galaxy+Buds+3",
+      "category_id": 3
+    },
+    {
+      "name": "Laptop Lenovo ThinkPad X1 Carbon",
+      "price": 47000000,
+      "description": "Laptop doanh nhân siêu nhẹ và bền bỉ",
+      "imageUrl": "https://placehold.co/300x300/png?text=ThinkPad+X1+Carbon",
+      "category_id": 2
+    }
+  ],
+  "coupons": [
+    {
+      "code": "SAVE10",
+      "type": "percent",
+      "discount_value": 10,
+      "min_order_amount": 300000,
+      "expired_at": "2099-12-31",
+      "is_active": 1,
+      "max_uses_per_user": 1
+    },
+    {
+      "code": "BIGBUY",
+      "type": "fixed",
+      "discount_value": 50000,
+      "min_order_amount": 500000,
+      "expired_at": "2099-12-31",
+      "is_active": 1,
+      "max_uses_per_user": 1
+    },
+    {
+      "code": "VIP100",
+      "type": "fixed",
+      "discount_value": 100000,
+      "min_order_amount": 300000,
+      "expired_at": "2099-12-31",
+      "is_active": 1,
+      "max_uses_per_user": 2
+    },
+    {
+      "code": "EXPIRED",
+      "type": "percent",
+      "discount_value": 20,
+      "min_order_amount": 100000,
+      "expired_at": "2020-01-01",
+      "is_active": 1,
+      "max_uses_per_user": 1
+    }
+  ],
+  "orders": [
+    {
+      "user_id": 2,
+      "total_amount": 7600000,
+      "status": "pending",
+      "shipping_address": "123 Đường ABC, Quận 1, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 14500000,
+      "status": "delivered",
+      "shipping_address": "456 Đường XYZ, Quận 3, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 2990000,
+      "status": "shipped",
+      "shipping_address": "789 Đường MNO, Quận 5, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 5200000,
+      "status": "pending",
+      "shipping_address": "12 Đường PQR, Thủ Đức, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 3750000,
+      "status": "delivered",
+      "shipping_address": "98 Đường STU, Quận 7, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 18000000,
+      "status": "cancelled",
+      "shipping_address": "55 Đường VWX, Quận 2, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 11200000,
+      "status": "shipped",
+      "shipping_address": "34 Đường YZA, Quận Bình Thạnh, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 6500000,
+      "status": "pending",
+      "shipping_address": "67 Đường BCD, Quận 4, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 2250000,
+      "status": "delivered",
+      "shipping_address": "21 Đường EFG, Quận 10, TP.HCM"
+    },
+    {
+      "user_id": 2,
+      "total_amount": 9600000,
+      "status": "shipped",
+      "shipping_address": "44 Đường HIJ, Quận Tân Bình, TP.HCM"
+    }
+  ],
+  "coupon_usage": [
+    {
+      "coupon_id": 1,
+      "user_id": 2,
+      "used_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "coupon_id": 2,
+      "user_id": 2,
+      "used_at": "2024-03-10T08:45:00Z"
+    },
+    {
+      "coupon_id": 3,
+      "user_id": 2,
+      "used_at": "2024-05-20T14:30:00Z"
+    },
+    {
+      "coupon_id": 4,
+      "user_id": 2,
+      "used_at": "2024-06-15T19:10:00Z"
+    },
+    {
+      "coupon_id": 1,
+      "user_id": 2,
+      "used_at": "2024-07-01T12:00:00Z"
+    }
+  ]
+}
