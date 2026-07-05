@@ -36,7 +36,7 @@ describe('Database Integrity Tests', () => {
         const checkSql = `
       SELECT id, name, category_id 
       FROM products 
-      WHERE category_id IS NOT NUL
+      WHERE category_id IS NOT NULL 
         AND category_id NOT IN (SELECT id FROM categories)
     `;
 
