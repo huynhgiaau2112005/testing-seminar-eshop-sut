@@ -37,7 +37,7 @@ describe('Database Integrity Tests', () => {
       SELECT id, name, category_id 
       FROM products 
       WHERE category_id IS NOT NULL 
-        AND category_id NOT IN (SELECT id FROM categories)
+        AND category_id NOT IN (SELECT id FROM categories
     `;
 
         test('should have 0 violating products in a healthy database', async () => {
