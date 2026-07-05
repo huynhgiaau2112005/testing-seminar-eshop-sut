@@ -11,7 +11,7 @@ export default function Cart() {
   const handleCheckout = () => {
     if (!user) {
       alert("Bạn cần đăng nhập để thanh toán!");
-      navigate('/login');
+      navigate('/login123');
       return;
     }
     navigate('/checkout');
