@@ -7,19 +7,33 @@
     "test": "jest",
     "dev": "node server.js",
     "start": "node server.js",
-    "reset-db": "node reset_db.js"
+    "lint": "eslint .",
+    "reset-db": "node reset_db.js",
+    "db:seed": "node seed-mongo.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "esplint": "^0.10.2",
     "express": "^5.2.1",
     "jest": "^30.4.2",
     "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.4",
     "pg": "^8.22.0",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.6.0",
+    "globals": "^17.7.0",
+    "migrate-mongo": "^14.0.7",
+    "prettier": "^3.9.4"
   }
 }
