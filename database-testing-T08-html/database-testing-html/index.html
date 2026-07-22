@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Database Testing — T08 Seminar</title>
+    <style>
+      :root {
+        --bg: #06111f;
+        --ink: #eef7ff;
+        --muted: #9ab0c7;
+        --cyan: #20c8ff;
+        --blue: #4d78ff;
+        --red: #ff5364;
+        --green: #3ee6a1;
+        --amber: #ffcf5a;
+        --line: rgba(160, 205, 240, 0.2);
+        --panel: rgba(8, 24, 42, 0.78);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #020712;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 82% 12%,
+            rgba(32, 200, 255, 0.12),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 8% 88%,
+            rgba(77, 120, 255, 0.12),
+            transparent 28%
+          );
+        pointer-events: none;
+      }
+      .deck {
+        height: 100%;
+        position: relative;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        padding: 6.5vh 7vw 7.5vh;
+        display: grid;
+        align-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(32px);
+        transition: 0.35s ease;
+        background: linear-gradient(
+          135deg,
+          rgba(5, 15, 28, 0.98),
+          rgba(3, 10, 21, 0.98)
+        );
+        overflow: hidden;
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+      .slide:after {
+        content: attr(data-section);
+        position: absolute;
+        right: 4.5vw;
+        top: 3.3vh;
+        color: rgba(210, 232, 249, 0.45);
+        font-size: clamp(10px, 1vw, 16px);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .hero {
+        background-image:
+          linear-gradient(
+            90deg,
+            rgba(2, 8, 18, 0.98) 0%,
+            rgba(2, 8, 18, 0.86) 42%,
+            rgba(2, 8, 18, 0.12) 72%
+          ),
+          url("assets/database-hero.png");
+        background-position: center;
+        background-size: cover;
+      }
+      .kicker {
+        color: var(--cyan);
+        font-size: clamp(14px, 1.4vw, 23px);
+        font-weight: 750;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 1.5vh;
+      }
+      h1 {
+        font-size: clamp(48px, 6.2vw, 104px);
+        line-height: 0.95;
+        letter-spacing: -0.055em;
+        margin: 0;
+        max-width: 9.5ch;
+      }
+      h2 {
+        font-size: clamp(36px, 4.4vw, 72px);
+        line-height: 1.04;
+        letter-spacing: -0.045em;
+        margin: 0 0 3.2vh;
+        max-width: 15ch;
+      }
+      h3 {
+        font-size: clamp(23px, 2.25vw, 38px);
+        line-height: 1.15;
+        margin: 0.2em 0;
+      }
+      .lead {
+        font-size: clamp(20px, 2vw, 34px);
+        line-height: 1.4;
+        color: #cfe4f5;
+        max-width: 34ch;
+      }
+      .accent {
+        color: var(--cyan);
+      }
+      .danger {
+        color: var(--red);
+      }
+      .success {
+        color: var(--green);
+      }
+      .amber {
+        color: var(--amber);
+      }
+      .meta {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        margin-top: 4vh;
+        color: var(--muted);
+        font-size: clamp(13px, 1.15vw, 19px);
+      }
+      .meta .rule {
+        width: 60px;
+        height: 2px;
+        background: var(--cyan);
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5vw;
+        align-items: center;
+      }
+      .grid3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.2vw;
+      }
+      .panel {
+        padding: 2.1vw;
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          145deg,
+          rgba(13, 37, 61, 0.74),
+          rgba(6, 18, 32, 0.72)
+        );
+        border-radius: 22px;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.18);
+      }
+      .panel p,
+      .body {
+        font-size: clamp(17px, 1.55vw, 27px);
+        line-height: 1.48;
+        color: #c8d9e8;
+      }
+      .eyebrow {
+        font-size: clamp(12px, 1vw, 17px);
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .big-number {
+        font-size: clamp(56px, 7vw, 116px);
+        font-weight: 900;
+        line-height: 0.8;
+        color: transparent;
+        -webkit-text-stroke: 1.5px rgba(32, 200, 255, 0.7);
+      }
+      ul {
+        padding: 0;
+        margin: 2vh 0;
+        list-style: none;
+      }
+      li {
+        font-size: clamp(18px, 1.65vw, 28px);
+        line-height: 1.38;
+        margin: 1.2vh 0;
+        color: #d4e4f1;
+        padding-left: 1.5em;
+        position: relative;
+      }
+      li:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.57em;
+        width: 0.55em;
+        height: 0.55em;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 18px var(--cyan);
+      }
+      .flow {
+        display: flex;
+        align-items: center;
+        gap: 1vw;
+        margin-top: 4vh;
+      }
+      .flow .step {
+        flex: 1;
+        padding: 1.8vw;
+        border-top: 2px solid var(--cyan);
+        background: rgba(14, 38, 61, 0.58);
+        min-height: 150px;
+      }
+      .arrow {
+        font-size: 2.2vw;
+        color: var(--cyan);
+      }
+      .code {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        background: #020711;
+        border: 1px solid rgba(92, 151, 202, 0.35);
+        border-radius: 16px;
+        padding: 1.8vw;
+        color: #bde8ff;
+        font-size: clamp(14px, 1.3vw, 22px);
+        line-height: 1.65;
+        box-shadow: inset 0 0 40px rgba(32, 200, 255, 0.04);
+      }
+      .prompt {
+        color: var(--green);
+      }
+      .comment {
+        color: #71889e;
+      }
+      .sql {
+        color: #ffcf7a;
+      }
+      .test {
+        color: #caa8ff;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 2vw;
+        align-items: stretch;
+      }
+      .vs {
+        align-self: center;
+        color: rgba(255, 255, 255, 0.25);
+        font-size: 2vw;
+        font-weight: 900;
+      }
+      .badge {
+        display: inline-block;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 0.45em 0.8em;
+        font-size: clamp(11px, 0.9vw, 15px);
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .warning-card {
+        border-top: 4px solid var(--red);
+      }
+      .warning-card:nth-child(2) {
+        border-color: var(--amber);
+      }
+      .warning-card:nth-child(3) {
+        border-color: var(--blue);
+      }
+      .warning-card .icon {
+        font-size: clamp(32px, 3vw, 54px);
+        margin-bottom: 1.5vh;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: clamp(14px, 1.2vw, 21px);
+        background: rgba(4, 14, 26, 0.72);
+        border: 1px solid var(--line);
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        padding: 1.2vh 1.2vw;
+        border-bottom: 1px solid var(--line);
+      }
+      .table th {
+        color: var(--cyan);
+        font-size: 0.78em;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .pii {
+        background: rgba(255, 83, 100, 0.18);
+        color: #ffd7db;
+        font-weight: 750;
+      }
+      .miss {
+        box-shadow: inset 0 0 0 2px var(--red);
+      }
+      .timer {
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(92px, 15vw, 250px);
+        font-weight: 900;
+        line-height: 0.9;
+        letter-spacing: -0.07em;
+        color: #eaf8ff;
+        text-shadow: 0 0 65px rgba(32, 200, 255, 0.25);
+      }
+      .timer-controls {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 4vh;
+      }
+      .timer-controls button,
+      .nav button {
+        background: rgba(10, 28, 48, 0.9);
+        color: #eaf6ff;
+        border: 1px solid rgba(133, 191, 235, 0.26);
+        border-radius: 999px;
+        padding: 10px 17px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      .timer-controls button:hover,
+      .nav button:hover {
+        border-color: var(--cyan);
+      }
+      .quote {
+        font-size: clamp(26px, 3vw, 52px);
+        line-height: 1.25;
+        max-width: 27ch;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+      .quote:before {
+        content: "“";
+        display: block;
+        color: var(--cyan);
+        font-size: 2.4em;
+        line-height: 0.45;
+        margin-bottom: 2vh;
+      }
+      .mini {
+        font-size: clamp(13px, 1.05vw, 18px);
+        color: var(--muted);
+      }
+      .takeaway {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2vw;
+        align-items: start;
+        margin: 1.8vh 0;
+      }
+      .takeaway .n {
+        font-size: clamp(27px, 3vw, 50px);
+        font-weight: 900;
+        color: var(--cyan);
+        line-height: 1;
+      }
+      .takeaway p {
+        margin: 0;
+        font-size: clamp(18px, 1.65vw, 29px);
+        line-height: 1.36;
+        color: #d7e8f5;
+      }
+      .footer {
+        position: absolute;
+        left: 7vw;
+        bottom: 3vh;
+        color: rgba(184, 212, 233, 0.42);
+        font-size: clamp(10px, 0.85vw, 14px);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .page {
+        position: absolute;
+        right: 4.5vw;
+        bottom: 3vh;
+        color: rgba(184, 212, 233, 0.42);
+        font-variant-numeric: tabular-nums;
+      }
+      .nav {
+        position: fixed;
+        z-index: 20;
+        left: 50%;
+        bottom: 14px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        opacity: 0.22;
+        transition: 0.2s;
+      }
+      .nav:hover {
+        opacity: 1;
+      }
+      .nav button {
+        padding: 7px 12px;
+      }
+      .progress {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+        transition: width 0.35s;
+        z-index: 30;
+      }
+      .help {
+        position: fixed;
+        right: 18px;
+        top: 16px;
+        z-index: 40;
+        color: #9db3c7;
+        font-size: 12px;
+        opacity: 0.35;
+      }
+      .speaker-notes {
+        display: none;
+      }
+      .notes {
+        position: fixed;
+        z-index: 50;
+        left: 4vw;
+        right: 4vw;
+        bottom: 4vh;
+        max-height: 38vh;
+        overflow: auto;
+        background: rgba(1, 6, 14, 0.96);
+        border: 1px solid rgba(32, 200, 255, 0.35);
+        border-radius: 18px;
+        padding: 22px;
+        color: #d8e9f6;
+        display: none;
+        box-shadow: 0 20px 80px #000;
+      }
+      .notes.show {
+        display: block;
+      }
+      .notes strong {
+        color: var(--cyan);
+      }
+      .reveal {
+        opacity: 0.16;
+        filter: blur(2px);
+        transition: 0.3s;
+      }
+      .slide.revealed .reveal {
+        opacity: 1;
+        filter: none;
+      }
+      .center {
+        text-align: center;
+        justify-items: center;
+      }
+      .full {
+        max-width: none;
+      }
+      .line {
+        height: 1px;
+        background: linear-gradient(90deg, var(--cyan), transparent);
+        margin: 2vh 0 3vh;
+      }
+      .qr {
+        width: 150px;
+        height: 150px;
+        border: 8px solid white;
+        background: repeating-conic-gradient(#111 0 25%, #fff 0 50%) 0/28px 28px;
+        box-shadow: 0 0 0 1px #fff;
+      }
+      .hold {
+        border: 1px solid rgba(32, 200, 255, 0.35);
+        padding: 1.2em 1.5em;
+        border-radius: 16px;
+        background: rgba(32, 200, 255, 0.06);
+      }
+      @media (max-width: 800px) {
+        .slide {
+          padding: 9vh 6vw;
+        }
+        .grid2,
+        .grid3,
+        .compare {
+          grid-template-columns: 1fr;
+          gap: 2vh;
+        }
+        .grid3 {
+          align-content: center;
+        }
+        .panel {
+          padding: 4vw;
+        }
+        .vs,
+        .arrow {
+          display: none;
+        }
+        .flow {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .flow .step {
+          min-height: 0;
+        }
+        h1 {
+          font-size: 12vw;
+        }
+        .hero {
+          background-position: 66% center;
+        }
+        .hero:before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(2, 8, 18, 0.35);
+        }
+        .hero > * {
+          position: relative;
+        }
+        .table {
+          font-size: 12px;
+        }
+        .hide-mobile {
+          display: none;
+        }
+      }
+      @media print {
+        @page {
+          size: 16in 9in;
+          margin: 0;
+        }
+        body {
+          overflow: visible;
+        }
+        .slide {
+          position: relative;
+          width: 16in;
+          height: 9in;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          page-break-after: always;
+        }
+        .nav,
+        .help,
+        .progress,
+        .notes {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck" id="deck">
+      <section class="slide hero active" data-section="T08 · Database Testing">
+        <div class="kicker">Seminar · Traditional + AI-Augmented</div>
+        <h1>Database<br /><span class="accent">Testing</span></h1>
+        <p class="lead">
+          Bảo vệ “nguồn chân lý cuối cùng” — từ schema migration đến dữ liệu
+          riêng tư.
+        </p>
+        <div class="meta">
+          <span class="rule"></span><span>EShop case study</span>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Mở đầu:</strong> Chào thầy và các bạn. Hãy tưởng tượng ngày
+          mai là Black Friday: UI mượt, API trả 200, nhưng đơn hàng biến mất vì
+          migration làm hỏng ràng buộc khóa ngoại. Giao diện có thể đánh lừa;
+          database là nguồn chân lý cuối cùng. Hôm nay nhóm T08 trình bày cách
+          bảo vệ nó bằng Database Testing và AI-assisted data masking.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="01 · The Pitch">
+        <div class="grid2">
+          <div>
+            <div class="kicker">Một status 200 chưa đủ</div>
+            <h2>
+              Hệ thống “xanh” nhưng dữ liệu có thể đã
+              <span class="danger">vỡ</span>
+            </h2>
+            <p class="lead">
+              Khi foreign key biến mất, đơn hàng vẫn được ghi — nhưng không còn
+              thuộc về người dùng nào.
+            </p>
+          </div>
+          <div class="panel">
+            <div class="eyebrow">Black Friday · 30 phút sau deploy</div>
+            <div class="flow">
+              <div class="step">
+                <span class="badge success">UI</span>
+                <h3>Looks good</h3>
+                <p class="mini">Luồng mua hàng mượt</p>
+              </div>
+              <div class="arrow">→</div>
+              <div class="step">
+                <span class="badge success">API</span>
+                <h3>200 OK</h3>
+                <p class="mini">Response hợp lệ</p>
+              </div>
+              <div class="arrow">→</div>
+              <div class="step" style="border-color: var(--red)">
+                <span class="badge danger">DB</span>
+                <h3>Orphan rows</h3>
+                <p class="mini">Dữ liệu mất liên kết</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">Database = The last source of truth</div>
+        <aside class="speaker-notes">
+          <strong>Thông điệp:</strong> Đánh vào tâm lý chủ quan khi chỉ test
+          UI/API. Nhấn mạnh rằng database cần kiểm thử trực tiếp bằng
+          invariants, constraints và migration tests.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="01 · The Pitch">
+        <div class="kicker">Hai bài toán · Hai cách tiếp cận</div>
+        <h2 class="full">Schema phải nhất quán. Dữ liệu test phải an toàn.</h2>
+        <div class="compare">
+          <div class="panel">
+            <span class="badge accent">Traditional</span>
+            <h3>Flyway quản lý migration</h3>
+            <ul>
+              <li>Migration bằng SQL thuần</li>
+              <li>Theo dõi version và thứ tự</li>
+              <li>Đồng bộ Dev → Staging → Production</li>
+            </ul>
+            <p class="mini">
+              Lựa chọn gọn hơn cho nhóm quen SQL; Liquibase mạnh nhưng thường
+              cần XML/YAML.
+            </p>
+          </div>
+          <div class="vs">+</div>
+          <div class="panel">
+            <span class="badge amber">AI-Augmented</span>
+            <h3>Schema-aware masking</h3>
+            <ul>
+              <li>Nhận diện email, phone, address</li>
+              <li>Thay PII bằng dữ liệu giả</li>
+              <li>Giữ logic để functional test vẫn chạy</li>
+            </ul>
+            <p class="mini">Không clone nguyên production data về local.</p>
+          </div>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Lời dẫn:</strong> Bài toán thứ nhất là quản lý thay đổi
+          schema; nhóm chọn Flyway vì SQL thuần và versioning rõ. Bài toán thứ
+          hai là dữ liệu test: clone production gây rủi ro PII, trong khi random
+          faker có thể phá format hoặc logic. AI-assisted faker/masking dùng ngữ
+          cảnh schema để tạo dữ liệu nhất quán hơn.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="01 · Failure Modes">
+        <div class="kicker">Tester luôn hỏi: “Khi nào tool sai?”</div>
+        <h2 class="full">Ba failure modes không được bỏ qua</h2>
+        <div class="grid3">
+          <div class="panel warning-card">
+            <div class="icon">⌁</div>
+            <div class="eyebrow">01 · Blind spot</div>
+            <h3>PII trong free-text</h3>
+            <p>
+              AI nhận ra cột <b>Email</b>, nhưng có thể bỏ sót số điện thoại nằm
+              trong ghi chú giao hàng.
+            </p>
+          </div>
+          <div class="panel warning-card">
+            <div class="icon">◫</div>
+            <div class="eyebrow">02 · Privacy trade-off</div>
+            <h3>Format-preserving</h3>
+            <p>
+              Giữ đầu số giúp test pass, nhưng vẫn có thể làm lộ thông tin phân
+              bố hoặc khu vực.
+            </p>
+          </div>
+          <div class="panel warning-card">
+            <div class="icon">△</div>
+            <div class="eyebrow">03 · False confidence</div>
+            <h3>Migration “success”</h3>
+            <p>
+              SQL chạy được không có nghĩa schema đúng: index, trigger hoặc
+              constraint vẫn có thể bị thiếu.
+            </p>
+          </div>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Chuyển demo:</strong> Công cụ không thay thế tư duy tester.
+          Flyway xác nhận migration được áp dụng, không xác nhận mọi yêu cầu dữ
+          liệu còn đúng. Vì vậy cần chạy SQL invariants trước và sau migration.
+        </aside>
+      </section>
+
+      <section class="slide center" data-section="02 · Live Demo">
+        <div class="kicker">Live Demo</div>
+
+        <div
+          style="
+            width: clamp(90px, 9vw, 150px);
+            height: clamp(90px, 9vw, 150px);
+            display: grid;
+            place-items: center;
+            margin-bottom: 3vh;
+            border: 2px solid var(--cyan);
+            border-radius: 50%;
+            color: var(--cyan);
+            font-size: clamp(28px, 3vw, 50px);
+            font-weight: 900;
+            box-shadow:
+              0 0 40px rgba(32, 200, 255, 0.25),
+              inset 0 0 30px rgba(32, 200, 255, 0.08);
+          "
+        >
+          ▶
+        </div>
+
+        <h1 style="max-width: none">LIVE <span class="accent">DEMO</span></h1>
+
+        <div class="meta">
+          <span class="rule"></span>
+          <span>
+            Reset DB & SQL Invariants · Flyway Migration · AI Data Masking
+          </span>
+        </div>
+
+        <a
+          href="https://youtu.be/3J_50c0kbGA"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4vh;
+            padding: 14px 24px;
+            border: 1px solid var(--red);
+            border-radius: 999px;
+            background: rgba(255, 83, 100, 0.1);
+            color: #ffffff;
+            font-size: clamp(15px, 1.3vw, 21px);
+            font-weight: 750;
+            text-decoration: none;
+            transition: 0.25s ease;
+          "
+          onmouseover="
+            this.style.background = 'rgba(255, 83, 100, 0.25)';
+            this.style.transform = 'translateY(-2px)';
+          "
+          onmouseout="
+            this.style.background = 'rgba(255, 83, 100, 0.1)';
+            this.style.transform = 'translateY(0)';
+          "
+        >
+          <span style="color: var(--red); font-size: 1.3em">▶</span>
+          Xem video Demo trên YouTube: https://youtu.be/3J_50c0kbGA
+        </a>
+
+        <aside class="speaker-notes">
+          <strong>Chuyển sang Live Demo:</strong>
+          Tắt slide và mở VS Code, Terminal cùng SQLite Browser. Demo lần lượt
+          ba nội dung: 1. Reset database và chạy 5 SQL invariants. 2. Thực hiện
+          Flyway migration và minh họa cách khôi phục. 3. Chạy AI-assisted data
+          masking và kiểm tra lại functional test. Nếu không thể demo trực tiếp,
+          nhấn nút để mở video demo trên YouTube.
+        </aside>
+      </section>
+      <section class="slide" data-section="NoSQL · Comparison">
+        <div class="kicker">SQLite vs MongoDB</div>
+
+        <h2 class="full">
+          NoSQL thay đổi <span class="accent">công cụ</span>, không thay đổi mục
+          tiêu kiểm thử
+        </h2>
+
+        <div class="grid2">
+          <div class="panel">
+            <span class="badge accent">SQLite</span>
+            <h3>Relational Testing</h3>
+
+            <ul>
+              <li>Table và SQL schema</li>
+              <li>Foreign key và constraint</li>
+              <li>Flyway migration bằng SQL</li>
+              <li>V1/V2 compensating migration</li>
+              <li>SQL invariant tests</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <span class="badge success">MongoDB</span>
+            <h3>NoSQL Testing</h3>
+
+            <ul>
+              <li>Collection và JSON Schema Validator</li>
+              <li>Unique index và query kiểm tra</li>
+              <li><code>migrate-mongo</code> bằng JavaScript</li>
+              <li><code>up()</code> và <code>down()</code></li>
+              <li>Query/aggregation invariants</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hold" style="margin-top: 3vh">
+          <strong class="accent">Nhận xét:</strong>
+          Schema-less không có nghĩa là không cần kiểm soát schema. MongoDB linh
+          hoạt hơn, nhưng validation, tính toàn vẹn quan hệ và rollback phải
+          được thiết kế rõ ràng hơn.
+        </div>
+
+        <aside class="speaker-notes">
+          <strong>Lời trình bày:</strong>
+
+          Khi chuyển từ SQLite sang MongoDB, mục tiêu kiểm thử của nhóm không
+          thay đổi. Nhóm vẫn kiểm tra cấu trúc dữ liệu, dữ liệu không hợp lệ,
+          migration, masking và chức năng sau masking. Điểm khác biệt là công cụ
+          và cách triển khai. SQLite sử dụng Flyway và migration SQL; MongoDB sử
+          dụng migrate-mongo với các file JavaScript có hàm up và down. MongoDB
+          linh hoạt về cấu trúc document, nhưng schema-less không có nghĩa là
+          không cần schema. Nhóm vẫn phải tạo JSON Schema Validator và unique
+          index. Ngoài ra, MongoDB không tự bảo vệ foreign key như database quan
+          hệ, nên các quan hệ giữa document phải được kiểm tra bằng query hoặc
+          application test. Kết luận: NoSQL giảm sự cứng nhắc của schema nhưng
+          chuyển thêm trách nhiệm kiểm soát dữ liệu sang migration code và test.
+        </aside>
+      </section>
+      <section class="slide center" data-section="03 · Activity">
+        <div class="kicker">Audience Activity</div>
+        <h1 style="max-width: none">
+          Spot-the-<span class="danger">PII</span>
+        </h1>
+        <p class="lead">
+          Đóng vai AI. Tìm mọi dữ liệu có thể làm lộ danh tính người dùng — kể
+          cả trong từng ô free-text.
+        </p>
+        <div class="meta">
+          <span class="rule"></span
+          ><span>Khoanh PII · Đề xuất masking rule</span>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Luật chơi:</strong> Phát worksheet hoặc QR CSV. Các nhóm có 10
+          phút để tìm toàn bộ PII trong 100 dòng dữ liệu giả định, sau đó ghi
+          cách mask phù hợp: hash, synthetic/faker hay format-preserving. Nhắc
+          khán giả không chỉ nhìn tên cột.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="03 · Activity">
+        <div class="kicker">Worksheet preview</div>
+        <h2 class="full">Bạn tìm thấy bao nhiêu điểm rò rỉ?</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>customer_name</th>
+              <th>email</th>
+              <th>phone</th>
+              <th>customer_feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nguyễn An</td>
+              <td>an@example.com</td>
+              <td>0901 234 567</td>
+              <td>Giao sau 18:00</td>
+            </tr>
+            <tr>
+              <td>Trần Bình</td>
+              <td>binh@example.com</td>
+              <td>0938 000 246</td>
+              <td>Vui lòng gọi trước khi giao</td>
+            </tr>
+            <tr>
+              <td>Lê Chi</td>
+              <td>chi@example.com</td>
+              <td>0918 135 790</td>
+              <td>Giao cho anh Lâm — 0912 000 111</td>
+            </tr>
+            <tr>
+              <td>Phạm Duy</td>
+              <td>duy@example.com</td>
+              <td>0982 222 333</td>
+              <td>Để tại lễ tân</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="grid3" style="margin-top: 3vh">
+          <div class="panel">
+            <span class="badge">Hash</span>
+            <p>So sánh ổn định, khó hoàn nguyên</p>
+          </div>
+          <div class="panel">
+            <span class="badge">Synthetic</span>
+            <p>Thay hoàn toàn bằng giá trị giả</p>
+          </div>
+          <div class="panel">
+            <span class="badge">Format-preserving</span>
+            <p>Giữ cấu trúc cần cho test</p>
+          </div>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Facilitator:</strong> Cho khán giả làm độc lập. Không bật đáp
+          án ở slide này. Phút thứ 5 gợi ý: “Các bạn đã kiểm tra kỹ cột Customer
+          Feedback chưa?” Dữ liệu trên slide là dữ liệu giả phục vụ bài tập.
+        </aside>
+      </section>
+
+      <section class="slide center" data-section="03 · Activity">
+        <div class="kicker">Thời gian thực hành</div>
+        <div class="timer" id="timer">10:00</div>
+        <p class="lead">Đừng chỉ nhìn tiêu đề cột. Hãy đọc cả giá trị.</p>
+        <div class="timer-controls">
+          <button id="startTimer">Bắt đầu / Tạm dừng</button
+          ><button id="resetTimer">Đặt lại 10:00</button>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Điều phối:</strong> Bật đếm ngược. F1/F2 đi quanh lớp hỗ trợ.
+          Ở mốc 05:00, đưa gợi ý về Customer Feedback. Khi hết giờ, chuyển sang
+          slide đáp án.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="03 · Reveal">
+        <div class="kicker">Đáp án · Nhấn R để hiện</div>
+        <h2 class="full">AI bắt được cột rõ ràng — nhưng bỏ sót free-text</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>customer_name</th>
+              <th>email</th>
+              <th>phone</th>
+              <th>customer_feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pii">Nguyễn An</td>
+              <td class="pii">an@example.com</td>
+              <td class="pii">0901 234 567</td>
+              <td>Giao sau 18:00</td>
+            </tr>
+            <tr>
+              <td class="pii">Trần Bình</td>
+              <td class="pii">binh@example.com</td>
+              <td class="pii">0938 000 246</td>
+              <td>Vui lòng gọi trước khi giao</td>
+            </tr>
+            <tr>
+              <td class="pii">Lê Chi</td>
+              <td class="pii">chi@example.com</td>
+              <td class="pii">0918 135 790</td>
+              <td class="reveal pii miss">Giao cho anh Lâm — 0912 000 111</td>
+            </tr>
+            <tr>
+              <td class="pii">Phạm Duy</td>
+              <td class="pii">duy@example.com</td>
+              <td class="pii">0982 222 333</td>
+              <td>Để tại lễ tân</td>
+            </tr>
+          </tbody>
+        </table>
+        <p
+          class="quote reveal"
+          style="font-size: clamp(20px, 2.1vw, 34px); margin-top: 4vh"
+        >
+          Free-text là vùng rủi ro cao nhất — vì dữ liệu nhạy cảm không tuân
+          theo schema rõ ràng.
+        </p>
+        <aside class="speaker-notes">
+          <strong>Sửa bài:</strong> Mời một nhóm nêu các cột PII. Sau đó nhấn R
+          để lộ điểm AI bỏ sót trong Customer Feedback. Bài học: không phó mặc
+          100% cho tool; cần rule-based scan, review thủ công và test bằng dữ
+          liệu đã kiểm soát.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="03 · Debate">
+        <div class="kicker">Trade-off discussion</div>
+        <h2 class="full">
+          Giữ đầu số để test pass — hay thay hoàn toàn để riêng tư hơn?
+        </h2>
+        <div class="compare">
+          <div class="panel">
+            <span class="badge accent">Format-preserving</span>
+            <h3>Giữ cấu trúc</h3>
+            <ul>
+              <li>Test kiểm tra đầu số vẫn chạy</li>
+              <li>Dữ liệu gần hành vi thật hơn</li>
+              <li class="danger">Có thể lộ phân bố vùng/nhà mạng</li>
+            </ul>
+          </div>
+          <div class="vs">VS</div>
+          <div class="panel">
+            <span class="badge success">Synthetic</span>
+            <h3>Thay hoàn toàn</h3>
+            <ul>
+              <li>Giảm liên hệ với dữ liệu gốc</li>
+              <li>Dễ kiểm soát tập test</li>
+              <li class="amber">Có thể mất logic miền dữ liệu</li>
+            </ul>
+          </div>
+        </div>
+        <p class="lead" style="margin-top: 3vh">
+          Nếu là Tech Lead, bạn chọn rule nào — và kiểm soát rủi ro bằng cách
+          nào?
+        </p>
+        <aside class="speaker-notes">
+          <strong>Tranh luận:</strong> Mời một nhóm trả lời. Không có lựa chọn
+          đúng tuyệt đối; quyết định phụ thuộc mục tiêu test và mức độ nhạy cảm.
+          Gợi ý kết luận: tạo tập synthetic có chủ đích cho logic đầu số, thay
+          vì giữ phân bố thật từ production.
+        </aside>
+      </section>
+
+      <section class="slide" data-section="04 · Takeaways">
+        <div class="kicker">Ba điều cần nhớ</div>
+        <h2 class="full">
+          Tool giúp tăng tốc; kiểm chứng vẫn thuộc về con người
+        </h2>
+        <div class="takeaway">
+          <div class="n">01</div>
+          <p>
+            <b>Free-text là tử huyệt của PII.</b><br /><span class="mini"
+              >Quét theo schema là chưa đủ; cần kiểm tra giá trị và
+              review.</span
+            >
+          </p>
+        </div>
+        <div class="takeaway">
+          <div class="n">02</div>
+          <p>
+            <b>Format-preserving luôn có trade-off.</b><br /><span class="mini"
+              >Testability tăng nhưng có thể giữ lại dấu vết phân bố.</span
+            >
+          </p>
+        </div>
+        <div class="takeaway">
+          <div class="n">03</div>
+          <p>
+            <b>Migration success ≠ database correctness.</b><br /><span
+              class="mini"
+              >Luôn chạy invariants và functional tests trước/sau thay
+              đổi.</span
+            >
+          </p>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Debrief:</strong> Tóm gọn ba ý. Có thể bổ sung: schema-aware
+          AI thường tạo dữ liệu hợp ngữ cảnh hơn naive faker, nhưng đầu ra vẫn
+          phải được validate. Nhắc người tham dự điền one-minute paper/feedback
+          trên Moodle nếu có.
+        </aside>
+      </section>
+
+      <section class="slide center" data-section="04 · Q&A">
+        <div class="kicker">Q&A</div>
+        <h1 style="max-width: none">
+          Câu hỏi nào còn nằm <span class="accent">dưới lớp dữ liệu?</span>
+        </h1>
+        <p class="lead">Flyway · SQL invariants · AI masking · PII · CI/CD</p>
+        <div class="meta">
+          <span class="rule"></span><span>T08 Seminar · Database Testing</span>
+        </div>
+        <aside class="speaker-notes">
+          <strong>Nếu lớp im lặng:</strong> Gợi câu hỏi: “Nếu migration lỗi giữa
+          chừng trên CI/CD thì sao?” Trả lời: ưu tiên DB hỗ trợ transactional
+          DDL; với SQLite, tạo bản sao/backup có kiểm soát trước migration và
+          kiểm thử khôi phục. Câu hỏi phụ: AI khác Faker ở đâu? AI có thể dùng
+          context giữa Country, Zipcode và các cột liên quan, nhưng luôn phải
+          validate đầu ra.
+        </aside>
+      </section>
+    </main>
+
+    <div class="help">
+      ← → chuyển slide · F toàn màn hình · N ghi chú · R hiện đáp án
+    </div>
+    <div class="nav">
+      <button id="prev" aria-label="Slide trước">←</button
+      ><button id="full" aria-label="Toàn màn hình">F</button
+      ><button id="next" aria-label="Slide sau">→</button>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="notes" id="notes"></div>
+    <script>
+      (() => {
+        const slides = [...document.querySelectorAll(".slide")],
+          progress = document.getElementById("progress"),
+          notes = document.getElementById("notes");
+        let index = 0,
+          notesOpen = false;
+        slides.forEach((s, i) => {
+          const p = document.createElement("div");
+          p.className = "page";
+          p.textContent = `${String(i + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+          s.appendChild(p);
+        });
+        function show(n) {
+          index = Math.max(0, Math.min(slides.length - 1, n));
+          slides.forEach((s, i) => s.classList.toggle("active", i === index));
+          progress.style.width = ((index + 1) / slides.length) * 100 + "%";
+          const sn = slides[index].querySelector(".speaker-notes");
+          notes.innerHTML = sn ? sn.innerHTML : "Không có ghi chú.";
+          history.replaceState(null, "", "#" + (index + 1));
+        }
+        function toggleNotes() {
+          notesOpen = !notesOpen;
+          notes.classList.toggle("show", notesOpen);
+        }
+        document.getElementById("prev").onclick = () => show(index - 1);
+        document.getElementById("next").onclick = () => show(index + 1);
+        document.getElementById("full").onclick = () =>
+          document.fullscreenElement
+            ? document.exitFullscreen()
+            : document.documentElement.requestFullscreen();
+        document.addEventListener("keydown", (e) => {
+          if (["ArrowRight", "PageDown", " "].includes(e.key)) {
+            e.preventDefault();
+            show(index + 1);
+          }
+          if (["ArrowLeft", "PageUp"].includes(e.key)) {
+            e.preventDefault();
+            show(index - 1);
+          }
+          if (e.key === "Home") show(0);
+          if (e.key === "End") show(slides.length - 1);
+          if (e.key.toLowerCase() === "f")
+            document.fullscreenElement
+              ? document.exitFullscreen()
+              : document.documentElement.requestFullscreen();
+          if (e.key.toLowerCase() === "n") toggleNotes();
+          if (e.key.toLowerCase() === "r")
+            slides[index].classList.toggle("revealed");
+          if (e.key === "Escape" && notesOpen) toggleNotes();
+        });
+        let remaining = 600,
+          running = false,
+          timerId = null;
+        const timer = document.getElementById("timer");
+        function paint() {
+          timer.textContent =
+            String(Math.floor(remaining / 60)).padStart(2, "0") +
+            ":" +
+            String(remaining % 60).padStart(2, "0");
+          timer.style.color = remaining <= 60 ? "var(--red)" : "#eaf8ff";
+        }
+        document.getElementById("startTimer").onclick = () => {
+          running = !running;
+          clearInterval(timerId);
+          if (running)
+            timerId = setInterval(() => {
+              if (remaining > 0) {
+                remaining--;
+                paint();
+              } else {
+                running = false;
+                clearInterval(timerId);
+              }
+            }, 1000);
+        };
+        document.getElementById("resetTimer").onclick = () => {
+          running = false;
+          clearInterval(timerId);
+          remaining = 600;
+          paint();
+        };
+        const hash = parseInt(location.hash.slice(1), 10);
+        show(Number.isFinite(hash) ? hash - 1 : 0);
+      })();
+    </script>
+  </body>
+</html>

@@ -21,18 +21,18 @@ flowchart LR
     J --> K[Functional API smoke tests]
 ```
 
-*Hình 1 — Chuỗi thao tác của lab. Các nút quay về Reset là chủ đích: dữ liệu phải luôn xác định trước mỗi phần kiểm thử.*
+_Hình 1 — Chuỗi thao tác của lab. Các nút quay về Reset là chủ đích: dữ liệu phải luôn xác định trước mỗi phần kiểm thử._
 
 ## 2. Điều kiện đầu vào và cài công cụ từ đầu
 
-| Công cụ | Dùng để làm gì | Kiểm tra sau khi cài |
-| --- | --- | --- |
-| Git | lấy mã nguồn | `git --version` |
-| Node.js LTS **>= 20.19** và npm >= 10 | backend, Faker, frontend | `node --version` và `npm --version` |
-| SQLite CLI 3 | chạy SQL, xem schema | `sqlite3 --version` |
-| Flyway CLI | chạy migration | `flyway -v` |
+| Công cụ                                                       | Dùng để làm gì            | Kiểm tra sau khi cài                                            |
+| ------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------- |
+| Git                                                           | lấy mã nguồn              | `git --version`                                                 |
+| Node.js LTS **>= 20.19** và npm >= 10                         | backend, Faker, frontend  | `node --version` và `npm --version`                             |
+| SQLite CLI 3                                                  | chạy SQL, xem schema      | `sqlite3 --version`                                             |
+| Flyway CLI                                                    | chạy migration            | `flyway -v`                                                     |
 | Docker Desktop + MongoDB 8 (hoặc MongoDB Community + mongosh) | demo NoSQL local ở phần 8 | `docker --version`; `docker exec eshop-mongo mongosh --version` |
-| `curl` | functional smoke test API | `curl --version` |
+| `curl`                                                        | functional smoke test API | `curl --version`                                                |
 
 ### 2.1 Cài đặt
 
@@ -64,7 +64,7 @@ flyway -configFiles=flyway.conf info
 
 Bạn đang ở `backend/` từ bước cài dependency. Kết quả phải chỉ tới `jdbc:sqlite:database.sqlite` và location `filesystem:migration`. Flyway đọc đường dẫn tương đối theo **thư mục hiện tại**, vì vậy mọi lệnh Flyway trong tài liệu này đều phải chạy tại `backend/`.
 
-## 3. Reset và seed database EShop
+## 3. Reset và seed database EShop (23127153 - Huỳnh Gia Âu)
 
 Tại `backend/`, dừng server Node nếu đang chạy (nhấn `Ctrl+C` ở terminal chạy server), sau đó:
 
@@ -87,10 +87,10 @@ coupons|4
 
 Tài khoản seed thực tế là:
 
-| Vai trò | Email | Mật khẩu |
-| --- | --- | --- |
-| Admin | `admin@eshop.com` | `Admin123!` |
-| User | `test@eshop.com` | `Test1234!` |
+| Vai trò | Email             | Mật khẩu    |
+| ------- | ----------------- | ----------- |
+| Admin   | `admin@eshop.com` | `Admin123!` |
+| User    | `test@eshop.com`  | `Test1234!` |
 
 > Lưu ý: `setup_guide.md` ghi `admin123` cho admin, nhưng dữ liệu nguồn [`backend/seed-data.json`](backend/seed-data.json) ghi `Admin123!`. Trong lab phải tin dữ liệu seed.
 
@@ -107,7 +107,7 @@ $ sqlite3 database.sqlite "SELECT COUNT(*) FROM products;"
 18
 ```
 
-## 4. Chạy đủ 5 SQL invariant tests
+## 4. Chạy đủ 5 SQL invariant tests (23127502 - Đỗ Nguyễn Minh Trí)
 
 **Invariant** là điều phải luôn đúng với database. Một query trả `PASS` khi số bản ghi vi phạm là `0`; không dùng việc “query không lỗi” làm bằng chứng dữ liệu đúng.
 
@@ -165,13 +165,13 @@ SQL
 
 Kết quả mong đợi ngay sau reset là 5 dòng `PASS` và `violating_rows` đều bằng `0`.
 
-| ID | Điều mà test phát hiện | Vì sao cần test ở mức DB |
-| --- | --- | --- |
-| INV-01 | giá sản phẩm rỗng/không dương | UI validation có thể bị bỏ qua khi gọi API trực tiếp |
-| INV-02 | product mồ côi category | schema hiện không khai báo foreign key cho quan hệ này |
-| INV-03 | order mồ côi user | bảo vệ báo cáo/lịch sử đơn hàng |
-| INV-04 | coupon usage tham chiếu dữ liệu không tồn tại | bảo vệ tính đúng đắn của giới hạn coupon |
-| INV-05 | email rỗng, sai dạng đơn giản hoặc trùng | `users.email` hiện không có `UNIQUE`/`NOT NULL` trong schema |
+| ID     | Điều mà test phát hiện                        | Vì sao cần test ở mức DB                                     |
+| ------ | --------------------------------------------- | ------------------------------------------------------------ |
+| INV-01 | giá sản phẩm rỗng/không dương                 | UI validation có thể bị bỏ qua khi gọi API trực tiếp         |
+| INV-02 | product mồ côi category                       | schema hiện không khai báo foreign key cho quan hệ này       |
+| INV-03 | order mồ côi user                             | bảo vệ báo cáo/lịch sử đơn hàng                              |
+| INV-04 | coupon usage tham chiếu dữ liệu không tồn tại | bảo vệ tính đúng đắn của giới hạn coupon                     |
+| INV-05 | email rỗng, sai dạng đơn giản hoặc trùng      | `users.email` hiện không có `UNIQUE`/`NOT NULL` trong schema |
 
 ### 4.1 Bắt buộc quan sát một test FAIL
 
@@ -205,7 +205,7 @@ npm run reset-db
 
 Chạy lại khối 5 test ở phần 4; cả 5 phải trở về `PASS` trước khi làm migration.
 
-## 5. Chạy migration và mô phỏng rollback có kiểm chứng
+## 5. Chạy migration và mô phỏng rollback có kiểm chứng (23127273 - Lê Minh Trí)
 
 ### 5.1 Hiểu migration của repository này
 
@@ -229,12 +229,12 @@ sqlite3 database.sqlite ".tables audit_logs"
 
 Kết quả cần ghi nhận:
 
-| Kiểm tra | Dấu hiệu V1 đã chạy |
-| --- | --- |
-| `info` | baseline `0` và version `1` có state `Success`; V2 còn `Pending` |
-| `.schema users` | có `phone_number`, không còn `phone` |
-| `.schema products` | có `image_url`, không còn `imageUrl` |
-| `.tables audit_logs` | hiển thị `audit_logs` |
+| Kiểm tra             | Dấu hiệu V1 đã chạy                                              |
+| -------------------- | ---------------------------------------------------------------- |
+| `info`               | baseline `0` và version `1` có state `Success`; V2 còn `Pending` |
+| `.schema users`      | có `phone_number`, không còn `phone`                             |
+| `.schema products`   | có `image_url`, không còn `imageUrl`                             |
+| `.tables audit_logs` | hiển thị `audit_logs`                                            |
 
 `-target=1` bảo Flyway chỉ chạy các versioned migration tới và gồm version 1; đây là cách quan sát V1 trước khi V2 được chạy. Theo tài liệu Flyway, `migrate` bình thường áp dụng migration pending theo thứ tự và `target` giới hạn version đích.
 
@@ -266,7 +266,7 @@ Sau  V2: users.phone        + products.imageUrl  + (không audit_logs)
 
 Đây là **mô phỏng rollback**, không phải `flyway undo`. `flyway undo` là tính năng Flyway Teams, còn dự án đang dùng Flyway OSS; vì vậy V2 là cách an toàn, truy vết được để trả schema về tương thích với backend. Khi migration có thao tác phá hủy dữ liệu, phải có backup/restore đã thử nghiệm; migration bù trừ không tự khôi phục dữ liệu đã bị xóa.
 
-## 6. Mask `users.email` và `users.phone`, rồi kiểm tra dữ liệu
+## 6. Mask `users.email` và `users.phone`, rồi kiểm tra dữ liệu (23127044 - Đỗ Văn Hà)
 
 Chỉ thực hiện phần này khi V2 đã hoàn tất, vì script masking đang query cột `phone` gốc. Trong phần kiểm tra database này, giữ backend Node đang dừng để tránh một restart bất ngờ làm seed lại database, rồi chạy:
 
@@ -351,15 +351,15 @@ curl -sS -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/users/me
 curl -sS http://localhost:3000/api/products
 ```
 
-| Request | Kết quả mong đợi | Bằng chứng chức năng |
-| --- | --- | --- |
-| `GET /api/cart` không token | `HTTP/1.1 401` | endpoint bảo vệ route |
-| `GET /api/users/me` có token | JSON user id 2, `email` kết thúc `@faker.test`, `phone` 10 số bắt đầu `09` | login vẫn hoạt động với PII đã mask |
-| `GET /api/products` | JSON mảng 18 products | read API vẫn hoạt động sau V2/masking |
+| Request                      | Kết quả mong đợi                                                           | Bằng chứng chức năng                  |
+| ---------------------------- | -------------------------------------------------------------------------- | ------------------------------------- |
+| `GET /api/cart` không token  | `HTTP/1.1 401`                                                             | endpoint bảo vệ route                 |
+| `GET /api/users/me` có token | JSON user id 2, `email` kết thúc `@faker.test`, `phone` 10 số bắt đầu `09` | login vẫn hoạt động với PII đã mask   |
+| `GET /api/products`          | JSON mảng 18 products                                                      | read API vẫn hoạt động sau V2/masking |
 
 Sau smoke test, chạy lại khối 5 SQL invariants một lần cuối và lưu terminal output vào báo cáo lab. Điều kiện hoàn thành: **5 PASS + verify_masking 4 PASS + API profile trả PII đã mask**.
 
-## 8. Bổ sung lab NoSQL — MongoDB `users`
+## 8. Bổ sung lab NoSQL — MongoDB `users` (23127502 - Đỗ Nguyễn Minh Trí)
 
 MongoDB được chọn thay vì Redis vì document `users` có các trường tương đương trực tiếp với bảng `users` của EShop. Đây là **demo NoSQL độc lập**, dùng dữ liệu Faker hoàn toàn giả; backend EShop hiện vẫn chạy SQLite và không tự đọc MongoDB. Không dùng database này để thay thế database production.
 
@@ -375,7 +375,7 @@ flowchart LR
     H -. tùy chọn .-> I[Flyway MongoDB migration riêng]
 ```
 
-*Hình 2 — Demo NoSQL tương ứng 8 đầu việc: validation, dữ liệu giả, failure có chủ đích, masking, query và migration tùy chọn.*
+_Hình 2 — Demo NoSQL tương ứng 8 đầu việc: validation, dữ liệu giả, failure có chủ đích, masking, query và migration tùy chọn._
 
 ### 8.1 Khởi động MongoDB local
 
@@ -419,20 +419,20 @@ db.createCollection("users", {
         email: {
           bsonType: "string",
           pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-          description: "must be an email-shaped string"
+          description: "must be an email-shaped string",
         },
         phone: {
           bsonType: "string",
           pattern: "^09[0-9]{8}$",
-          description: "must have 10 digits and begin with 09"
+          description: "must have 10 digits and begin with 09",
         },
         role: { enum: ["admin", "user"] },
-        masked: { bsonType: "bool" }
-      }
-    }
+        masked: { bsonType: "bool" },
+      },
+    },
   },
   validationLevel: "strict",
-  validationAction: "error"
+  validationAction: "error",
 });
 
 db.users.createIndex({ email: 1 }, { unique: true, name: "uq_users_email" });
@@ -464,7 +464,20 @@ Quay lại `mongosh` ở bước 8.2 để kiểm chứng import:
 
 ```javascript
 db.users.countDocuments({});
-db.users.find({}, { _id: 0, sourceUserId: 1, name: 1, email: 1, phone: 1, role: 1, masked: 1 }).sort({ sourceUserId: 1 });
+db.users
+  .find(
+    {},
+    {
+      _id: 0,
+      sourceUserId: 1,
+      name: 1,
+      email: 1,
+      phone: 1,
+      role: 1,
+      masked: 1,
+    },
+  )
+  .sort({ sourceUserId: 1 });
 ```
 
 Kết quả mong đợi: count là `5`; mỗi document có email đúng dạng, phone 10 chữ số bắt đầu `09`, `role` là `admin` hoặc `user`, và `masked: false`.
@@ -480,7 +493,7 @@ db.users.insertOne({
   name: "Invalid User",
   email: "not-an-email",
   role: "user",
-  masked: false
+  masked: false,
 });
 
 // FAIL 2: phone sai cấu trúc
@@ -490,7 +503,7 @@ db.users.insertOne({
   email: "invalid-phone@example.test",
   phone: "12345",
   role: "user",
-  masked: false
+  masked: false,
 });
 ```
 
@@ -515,28 +528,29 @@ MongoServerError: Document failed validation
 Lệnh sau chỉ thay PII giả trong collection lab. Dùng pipeline `$set` để email/phone mới được tạo từ `sourceUserId`, bảo đảm unique, có thể lặp lại và vẫn thỏa validator.
 
 ```javascript
-db.users.updateMany(
-  {},
-  [
-    {
-      $set: {
-        email: { $concat: ["user", { $toString: "$sourceUserId" }, "@masked.test"] },
-        phone: { $concat: ["090000000", { $toString: "$sourceUserId" }] },
-        masked: true,
-        maskedAt: "$$NOW"
-      }
-    }
-  ]
-);
+db.users.updateMany({}, [
+  {
+    $set: {
+      email: {
+        $concat: ["user", { $toString: "$sourceUserId" }, "@masked.test"],
+      },
+      phone: { $concat: ["090000000", { $toString: "$sourceUserId" }] },
+      masked: true,
+      maskedAt: "$$NOW",
+    },
+  },
+]);
 
-db.users.find(
-  { masked: true, email: /@masked\.test$/, phone: /^09[0-9]{8}$/ },
-  { _id: 0, sourceUserId: 1, email: 1, phone: 1, masked: 1, maskedAt: 1 }
-).sort({ sourceUserId: 1 });
+db.users
+  .find(
+    { masked: true, email: /@masked\.test$/, phone: /^09[0-9]{8}$/ },
+    { _id: 0, sourceUserId: 1, email: 1, phone: 1, masked: 1, maskedAt: 1 },
+  )
+  .sort({ sourceUserId: 1 });
 
 db.users.findOne(
   { email: "user3@masked.test" },
-  { _id: 0, sourceUserId: 1, email: 1, phone: 1, masked: 1 }
+  { _id: 0, sourceUserId: 1, email: 1, phone: 1, masked: 1 },
 );
 ```
 
@@ -549,8 +563,8 @@ Chạy 3 NoSQL invariants sau. Mỗi lệnh phải trả `0` vi phạm hoặc `5
 db.users.countDocuments({
   $or: [
     { email: { $not: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ } },
-    { phone: { $not: /^09[0-9]{8}$/ } }
-  ]
+    { phone: { $not: /^09[0-9]{8}$/ } },
+  ],
 }); // 0
 
 // NINV-02: tất cả 5 document đã mask
@@ -560,7 +574,7 @@ db.users.countDocuments({ masked: true, email: /@masked\.test$/ }); // 5
 db.users.aggregate([
   { $group: { _id: "$email", n: { $sum: 1 } } },
   { $match: { n: { $gt: 1 } } },
-  { $count: "duplicateEmails" }
+  { $count: "duplicateEmails" },
 ]); // không trả document nào
 ```
 
@@ -592,7 +606,7 @@ Tạo `nosql/migration/V1__mark_existing_users_masked.js`:
 ```javascript
 db.users.updateMany(
   { masked: { $exists: false } },
-  { $set: { masked: false } }
+  { $set: { masked: false } },
 );
 ```
 
@@ -610,33 +624,33 @@ Kết quả pass là `info` ghi nhận version `1` thành công và `validate` t
 
 AI không được gọi ở runtime khi chạy EShop. Dấu vết trong code là dòng tiêu đề `ChatGPT-assisted Data Masking` của [`backend/mask_sensitive_data_faker.js`](backend/mask_sensitive_data_faker.js); AI được dùng để hỗ trợ **thiết kế/viết** script masking. Khi chạy thực tế, script dùng thư viện cục bộ `@faker-js/faker` để sinh email/phone giả và SQLite transaction để cập nhật. Không có OpenAI API key, HTTP request tới mô hình, prompt hay quyết định AI nào trong luồng chạy.
 
-| Bước | AI có tham gia runtime? | Cơ chế thực tế |
-| --- | --- | --- |
-| Reset/seed, 5 SQL tests | Không | Node.js, JSON seed, SQLite CLI |
-| Flyway V1/V2 | Không | Flyway CLI thực thi SQL versioned |
-| Mask dữ liệu | Không | JavaScript + Faker + transaction SQLite; script được AI hỗ trợ soạn trước |
-| Lab MongoDB | Không | Script `nosql/generate_users_json.cjs` được AI hỗ trợ soạn trước, rồi Node.js + Faker sinh dữ liệu; MongoDB validation/masking/query chạy xác định |
-| Verify/API smoke | Không | SQLite CLI và `curl` |
+| Bước                    | AI có tham gia runtime? | Cơ chế thực tế                                                                                                                                     |
+| ----------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reset/seed, 5 SQL tests | Không                   | Node.js, JSON seed, SQLite CLI                                                                                                                     |
+| Flyway V1/V2            | Không                   | Flyway CLI thực thi SQL versioned                                                                                                                  |
+| Mask dữ liệu            | Không                   | JavaScript + Faker + transaction SQLite; script được AI hỗ trợ soạn trước                                                                          |
+| Lab MongoDB             | Không                   | Script `nosql/generate_users_json.cjs` được AI hỗ trợ soạn trước, rồi Node.js + Faker sinh dữ liệu; MongoDB validation/masking/query chạy xác định |
+| Verify/API smoke        | Không                   | SQLite CLI và `curl`                                                                                                                               |
 
 Điều này quan trọng cho khả năng tái lập: kết quả cấu trúc/điều kiện PASS-FAIL không phụ thuộc vào mô hình AI; chỉ giá trị email/phone giả cụ thể là ngẫu nhiên.
 
 ## 10. Failure modes và cách xử lý lỗi phổ biến
 
-| Failure mode / dấu hiệu | Nguyên nhân trong repo | Cách xác nhận và khắc phục |
-| --- | --- | --- |
-| Backend trả `no such column: phone`, `imageUrl`, `total_amount` sau migration | chỉ chạy V1 nên DB và `server.js` không cùng schema | dừng server, chạy `flyway -configFiles=flyway.conf migrate` để chạy V2; kiểm tra `.schema users` có `phone` trước khi restart |
-| `flyway ...` báo không tìm thấy migration hoặc tạo nhầm DB | chạy lệnh ngoài `backend/`, nên đường dẫn tương đối trong `flyway.conf` sai | `pwd` phải kết thúc `/backend`; dùng đúng `-configFiles=flyway.conf`; chạy `flyway ... info` để xem JDBC URL |
-| `Validate failed` sau khi đổi tên/chỉnh sửa V1/V2 | Flyway lưu checksum và description của migration đã áp dụng | khôi phục file migration từ version control. Không sửa history bằng tay; với DB disposable, `npm run reset-db` rồi chạy migration lại. Với DB quan trọng, backup + review `flyway repair` theo [tài liệu Repair](https://documentation.red-gate.com/flyway/reference/commands/repair) |
-| `SQLITE_BUSY: database is locked` khi mask/reset | server, SQLite shell hoặc process khác đang giữ file | dừng `npm run dev`, đóng `sqlite3` interactive shell, chạy lại một tiến trình thao tác DB; không reset/mask song song |
-| `Cannot find module '@faker-js/faker'` | chưa chạy `npm ci` ở root | từ root chạy `npm ci`, sau đó trở lại `backend` chạy `npm run mask-data` |
-| Login bằng `test@eshop.com` trả 401 sau masking | email seed đã bị thay có chủ ý | lấy email mới bằng `sqlite3 database.sqlite 'SELECT email FROM users WHERE id=2;'`; mật khẩu vẫn là `Test1234!` |
-| Profile không còn masked sau khi restart backend | `server.js` import `database.js`, script này drop/create/seed các bảng mỗi lần process khởi động | không restart backend giữa mask và API verification; nếu đã restart, mask lại rồi test ngay |
-| V2 không được áp dụng khi chạy `migrate` | database còn đang bị target override bởi command/config hoặc V2 bị lỗi | chạy `flyway -configFiles=flyway.conf info`, rồi chạy lại không có `-target=1`; xem output và `validate` |
-| `docker: Cannot connect to the Docker daemon` | Docker Desktop chưa chạy | mở Docker Desktop, chờ daemon sẵn sàng rồi chạy lại `docker ps`; hoặc dùng MongoDB Community cài local |
-| `Ports are not available ... 27018 ... bind: address already in use` | một process/container khác đang chiếm host port `27018` | chọn host port trống, ví dụ `-p 127.0.0.1:27019:27017`, rồi thay **mọi** URI host trong phần 8 từ `27018` thành `27019`; giữ `localhost:27017` cho lệnh chạy *bên trong* container |
-| `MongoServerError: Document failed validation` khi import | JSON không thỏa validator; đây là lỗi đúng nếu thử dữ liệu xấu | kiểm tra `email`, `phone`, `role`, `masked` và `sourceUserId`; với `users.json` do script tạo, không thêm `--bypassDocumentValidation` |
-| `E11000 duplicate key error` | email lặp, bị `uq_users_email` chặn | reset phần 8.2 và import lại một lần; không dùng `mongoimport` lặp lại trên collection đã có dữ liệu |
-| `mongosh: command not found` ở migration Mongo | mongosh chỉ có trong Docker hoặc chưa cài host | Docker exec vẫn đủ phần 8.1–8.5; phần 8.6 cần cài mongosh host theo hướng dẫn chính thức |
+| Failure mode / dấu hiệu                                                       | Nguyên nhân trong repo                                                                           | Cách xác nhận và khắc phục                                                                                                                                                                                                                                                            |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Backend trả `no such column: phone`, `imageUrl`, `total_amount` sau migration | chỉ chạy V1 nên DB và `server.js` không cùng schema                                              | dừng server, chạy `flyway -configFiles=flyway.conf migrate` để chạy V2; kiểm tra `.schema users` có `phone` trước khi restart                                                                                                                                                         |
+| `flyway ...` báo không tìm thấy migration hoặc tạo nhầm DB                    | chạy lệnh ngoài `backend/`, nên đường dẫn tương đối trong `flyway.conf` sai                      | `pwd` phải kết thúc `/backend`; dùng đúng `-configFiles=flyway.conf`; chạy `flyway ... info` để xem JDBC URL                                                                                                                                                                          |
+| `Validate failed` sau khi đổi tên/chỉnh sửa V1/V2                             | Flyway lưu checksum và description của migration đã áp dụng                                      | khôi phục file migration từ version control. Không sửa history bằng tay; với DB disposable, `npm run reset-db` rồi chạy migration lại. Với DB quan trọng, backup + review `flyway repair` theo [tài liệu Repair](https://documentation.red-gate.com/flyway/reference/commands/repair) |
+| `SQLITE_BUSY: database is locked` khi mask/reset                              | server, SQLite shell hoặc process khác đang giữ file                                             | dừng `npm run dev`, đóng `sqlite3` interactive shell, chạy lại một tiến trình thao tác DB; không reset/mask song song                                                                                                                                                                 |
+| `Cannot find module '@faker-js/faker'`                                        | chưa chạy `npm ci` ở root                                                                        | từ root chạy `npm ci`, sau đó trở lại `backend` chạy `npm run mask-data`                                                                                                                                                                                                              |
+| Login bằng `test@eshop.com` trả 401 sau masking                               | email seed đã bị thay có chủ ý                                                                   | lấy email mới bằng `sqlite3 database.sqlite 'SELECT email FROM users WHERE id=2;'`; mật khẩu vẫn là `Test1234!`                                                                                                                                                                       |
+| Profile không còn masked sau khi restart backend                              | `server.js` import `database.js`, script này drop/create/seed các bảng mỗi lần process khởi động | không restart backend giữa mask và API verification; nếu đã restart, mask lại rồi test ngay                                                                                                                                                                                           |
+| V2 không được áp dụng khi chạy `migrate`                                      | database còn đang bị target override bởi command/config hoặc V2 bị lỗi                           | chạy `flyway -configFiles=flyway.conf info`, rồi chạy lại không có `-target=1`; xem output và `validate`                                                                                                                                                                              |
+| `docker: Cannot connect to the Docker daemon`                                 | Docker Desktop chưa chạy                                                                         | mở Docker Desktop, chờ daemon sẵn sàng rồi chạy lại `docker ps`; hoặc dùng MongoDB Community cài local                                                                                                                                                                                |
+| `Ports are not available ... 27018 ... bind: address already in use`          | một process/container khác đang chiếm host port `27018`                                          | chọn host port trống, ví dụ `-p 127.0.0.1:27019:27017`, rồi thay **mọi** URI host trong phần 8 từ `27018` thành `27019`; giữ `localhost:27017` cho lệnh chạy _bên trong_ container                                                                                                    |
+| `MongoServerError: Document failed validation` khi import                     | JSON không thỏa validator; đây là lỗi đúng nếu thử dữ liệu xấu                                   | kiểm tra `email`, `phone`, `role`, `masked` và `sourceUserId`; với `users.json` do script tạo, không thêm `--bypassDocumentValidation`                                                                                                                                                |
+| `E11000 duplicate key error`                                                  | email lặp, bị `uq_users_email` chặn                                                              | reset phần 8.2 và import lại một lần; không dùng `mongoimport` lặp lại trên collection đã có dữ liệu                                                                                                                                                                                  |
+| `mongosh: command not found` ở migration Mongo                                | mongosh chỉ có trong Docker hoặc chưa cài host                                                   | Docker exec vẫn đủ phần 8.1–8.5; phần 8.6 cần cài mongosh host theo hướng dẫn chính thức                                                                                                                                                                                              |
 
 Ba failure modes tối thiểu cần trình bày trong báo cáo là: schema mismatch sau V1, SQLite lock khi thao tác đồng thời, và login seed thất bại sau masking. Bảng trên cung cấp thêm các trường hợp thường gặp để tái lập/khắc phục.
 
@@ -671,3 +685,7 @@ Ba failure modes tối thiểu cần trình bày trong báo cáo là: schema mis
 - [Flyway MongoDB Native Connector](https://documentation.red-gate.com/flyway/reference/database-driver-reference/mongodb) và [tutorial chính thức](https://documentation.red-gate.com/flyway/reference/tutorials/tutorial-using-native-connectors-to-connect-to-mongodb) — điều kiện mongosh, migration JavaScript và giới hạn transaction.
 
 Các nguồn trên chỉ xác nhận cách dùng công cụ. “Expected results” trong lab được xác nhận từ source của repository, đặc biệt `backend/database.js`, `backend/seed-data.json`, hai migration SQL và hai script masking/verify.
+
+## 13. Video Demo
+
+[Video demo](https://youtu.be/3J_50c0kbGA)
