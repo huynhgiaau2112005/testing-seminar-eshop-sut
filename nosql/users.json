@@ -1,0 +1,47 @@
+[
+  {
+    "sourceUserId": 1,
+    "name": "Astrid Schimmel",
+    "email": "bernardo34@example.test",
+    "phone": "0908978842",
+    "role": "admin",
+    "createdAt": "2026-07-22T00:00:00.000Z",
+    "masked": false
+  },
+  {
+    "sourceUserId": 2,
+    "name": "Jayce Herzog DDS",
+    "email": "porter69@example.test",
+    "phone": "0921022033",
+    "role": "user",
+    "createdAt": "2026-07-22T00:00:00.000Z",
+    "masked": false
+  },
+  {
+    "sourceUserId": 3,
+    "name": "Jayson Upton",
+    "email": "beulah.fadel29@example.test",
+    "phone": "0983164129",
+    "role": "user",
+    "createdAt": "2026-07-22T00:00:00.000Z",
+    "masked": false
+  },
+  {
+    "sourceUserId": 4,
+    "name": "Dr. Debra Jones",
+    "email": "kevin.kozey@example.test",
+    "phone": "0918839356",
+    "role": "user",
+    "createdAt": "2026-07-22T00:00:00.000Z",
+    "masked": false
+  },
+  {
+    "sourceUserId": 5,
+    "name": "Tyrel Thompson Jr.",
+    "email": "kristopher_schultz93@example.test",
+    "phone": "0943974147",
+    "role": "user",
+    "createdAt": "2026-07-22T00:00:00.000Z",
+    "masked": false
+  }
+]
